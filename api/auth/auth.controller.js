@@ -2,9 +2,9 @@ import { authService } from "./auth.service.js"
 import { loggerService } from "../../services/logger.service.js"
 
 export async function login(req, res) {
-  const { username, password } = req.body
+  const { email, password } = req.body
   try {
-    const user = await authService.login(username, password)
+    const user = await authService.login(email, password)
     const loginToken = authService.getLoginToken(user)
 
     loggerService.info("User login: ", user)
@@ -28,7 +28,7 @@ export async function signup(req, res) {
     const account = await authService.signup(email, username, fullName, imgUrl, password)
     loggerService.debug(`auth.route - new account created: ` + JSON.stringify(account))
 
-    const user = await authService.login(username, password)
+    const user = await authService.login(email, password)
     const loginToken = authService.getLoginToken(user)
 
     res.cookie("loginToken", loginToken)

@@ -13,14 +13,14 @@ export const authService = {
 
 const cryptr = new Cryptr(process.env.SECRET1 || "Secret-Puk-1234")
 
-async function login(username, password) {
-  loggerService.debug(`auth.service - login with username: ${username}`)
+async function login(email, password) {
+  loggerService.debug(`auth.service - login with email: ${email}`)
 
-  const user = await userService.getByUsername(username)
-  if (!user) throw new Error("Invalid username or password")
+  const user = await userService.getByEmail(email)
+  if (!user) throw new Error("Invalid email or password")
 
   const match = await bcrypt.compare(password, user.password)
-  if (!match) throw new Error("Invalid username or password")
+  if (!match) throw new Error("Invalid email or password")
 
   const userToLogin = { ...user }
   delete userToLogin.password

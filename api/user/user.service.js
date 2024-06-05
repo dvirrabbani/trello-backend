@@ -7,6 +7,7 @@ export const userService = {
   getById,
   remove,
   getByUsername,
+  getByEmail,
   update,
   add,
 }
@@ -15,7 +16,7 @@ async function query(filterBy = {}) {
   const criteria = _buildCriteria(filterBy)
   try {
     const collection = await dbService.getCollection("user")
-    const users = await collection.find(criteria).toArray()
+    let users = await collection.find(criteria).toArray()
     users = users.map((user) => {
       delete user.password
       user.createdAt = new ObjectId(user._id).getTimestamp()
@@ -61,6 +62,17 @@ async function getByUsername(username) {
     return user
   } catch (err) {
     loggerService.error(`while finding user by username: ${username}`, err)
+    throw err
+  }
+}
+
+async function getByEmail(email) {
+  try {
+    const collection = await dbService.getCollection("user")
+    const user = await collection.findOne({ email })
+    return user
+  } catch (err) {
+    loggerService.error(`while finding user by email: ${email}`, err)
     throw err
   }
 }
