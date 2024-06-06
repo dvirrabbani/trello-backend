@@ -32,8 +32,6 @@ async function query(filterBy = { txt: "" }) {
 async function getById(boardId) {
   try {
     const board = await collection.findOne({ _id: new ObjectId(boardId) })
-    board.createdAt = new ObjectId(board._id).getTimestamp()
-
     return board
   } catch (err) {
     loggerService.error(`while finding board ${boardId}`, err)
@@ -55,7 +53,17 @@ async function remove(boardId) {
 
 async function update(board) {
   try {
-    const { title, style, isStarred, archivedAt, createdBy, labels, members, groups, activities } = board
+    const {
+      title,
+      style,
+      isStarred,
+      archivedAt,
+      createdBy,
+      labels,
+      members,
+      groups,
+      activities,
+    } = board
     const boardToSave = {
       title,
       style,
@@ -68,7 +76,10 @@ async function update(board) {
       activities,
     }
 
-    await collection.updateOne({ _id: new ObjectId(board._id) }, { $set: boardToSave })
+    await collection.updateOne(
+      { _id: new ObjectId(board._id) },
+      { $set: boardToSave }
+    )
     return board
   } catch (err) {
     loggerService.error(`cannot update board ${board?._id}`, err)
