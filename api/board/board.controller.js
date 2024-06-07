@@ -40,6 +40,7 @@ export async function removeBoard(req, res) {
 export async function updateBoard(req, res) {
   const boardToUpdate = req.body
   const { loggedinUser } = req
+
   try {
     const updatedBoard = await boardService.update(boardToUpdate)
     // Notify all users except initiator of the update
