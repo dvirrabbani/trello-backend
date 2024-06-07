@@ -8,7 +8,7 @@ export async function login(req, res) {
     const loginToken = authService.getLoginToken(user)
 
     loggerService.info("User login: ", user)
-    res.cookie("loginToken", loginToken)
+    res.cookie("loginToken", loginToken, { sameSite: "None", secure: true })
 
     res.json(user)
   } catch (err) {
@@ -25,13 +25,21 @@ export async function signup(req, res) {
     // Never write passwords to log file!!!
     //loggerService.debug(fullName + ', ' + username + ', ' + password)
 
-    const account = await authService.signup(email, username, fullName, imgUrl, password)
-    loggerService.debug(`auth.route - new account created: ` + JSON.stringify(account))
+    const account = await authService.signup(
+      email,
+      username,
+      fullName,
+      imgUrl,
+      password
+    )
+    loggerService.debug(
+      `auth.route - new account created: ` + JSON.stringify(account)
+    )
 
     const user = await authService.login(email, password)
     const loginToken = authService.getLoginToken(user)
 
-    res.cookie("loginToken", loginToken)
+    res.cookie("loginToken", loginToken, { sameSite: "None", secure: true })
     res.json(user)
   } catch (err) {
     loggerService.error("Failed to signup " + err)

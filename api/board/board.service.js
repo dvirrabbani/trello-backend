@@ -101,7 +101,7 @@ async function getMiniBoards() {
   try {
     const collection = await dbService.getCollection("board")
     const boards = await collection.find().toArray()
-    console.log(boards)
+    console.log("mini boards length", boards.length)
     return boards.map((board) => ({
       _id: board._id,
       title: board.title,

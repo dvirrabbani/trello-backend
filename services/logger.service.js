@@ -13,6 +13,9 @@ export const loggerService = {
   error(...args) {
     doLog("ERROR", ...args)
   },
+  info(...args) {
+    doLog("INFO", ...args)
+  },
 }
 
 const logsDir = "./logs"
@@ -32,7 +35,9 @@ function isError(e) {
 }
 
 function doLog(level, ...args) {
-  const strs = args.map((arg) => (typeof arg === "string" || isError(arg) ? arg : JSON.stringify(arg)))
+  const strs = args.map((arg) =>
+    typeof arg === "string" || isError(arg) ? arg : JSON.stringify(arg)
+  )
   var line = strs.join(" | ")
   line = `${getTime()} - ${level} - ${line}\n`
   console.log(line)
