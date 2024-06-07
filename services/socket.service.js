@@ -32,31 +32,6 @@ export function setupSocketAPI(http) {
       socket.boardId = null
     })
 
-    socket.on("chat-send-msg", (msg) => {
-      loggerService.info(
-        `New chat msg from socket [id: ${socket.id}], emitting to topic ${socket.myTopic}`
-      )
-      // emits to all sockets:
-      // gIo.emit('chat addMsg', msg)
-
-      // emits only to sockets in the same room
-      socket.broadcast.to(socket.myTopic).emit("chat-add-msg", msg)
-    })
-
-    socket.on("user-watch", (userId) => {
-      loggerService.info(
-        `user-watch from socket [id: ${socket.id}], on user ${userId}`
-      )
-      socket.join("watching:" + userId)
-    })
-
-    socket.on("user-unwatch", (userId) => {
-      loggerService.info(
-        `user-unwatch from socket [id: ${socket.id}], on user ${userId}`
-      )
-      socket.leave("watching:" + userId)
-    })
-
     socket.on("set-user-socket", (userId) => {
       loggerService.info(
         `Setting socket.userId = ${userId} for socket [id: ${socket.id}]`
