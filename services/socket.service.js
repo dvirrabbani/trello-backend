@@ -13,16 +13,23 @@ export function setupSocketAPI(http) {
       loggerService.info(`Socket disconnected [id: ${socket.id}]`)
     })
 
-    socket.on("chat-set-topic", (topic) => {
-      if (socket.myTopic === topic) return
-      if (socket.myTopic) {
-        socket.leave(socket.myTopic)
+    socket.on("join-board", (boardId) => {
+      if (socket.boardId === boardId) return
+      if (socket.boardId) {
+        socket.leave(socket.boardId)
         loggerService.info(
-          `Socket is leaving topic ${socket.myTopic} [id: ${socket.id}]`
+          `Socket is leaving board ${socket.boardId} [id: ${socket.id}]`
         )
       }
-      socket.join(topic)
-      socket.myTopic = topic
+      socket.join(boardId)
+      loggerService.info(`Socket joined board ${boardId} [id: ${socket.id}]`)
+      socket.boardId = boardId
+    })
+
+    socket.on("leave-board", (boardId) => {
+      socket.leave(boardId)
+      loggerService.info(`Socket left board ${boardId} [id: ${socket.id}]`)
+      socket.boardId = null
     })
 
     socket.on("chat-send-msg", (msg) => {

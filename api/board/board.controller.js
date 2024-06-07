@@ -1,6 +1,7 @@
 import { boardService } from "./board.service.js"
 import { loggerService } from "../../services/logger.service.js"
-import { asyncLocalStorage } from "../../services/als.service.js"
+import { socketService } from "../../services/socket.service.js"
+import { authService } from "../auth/auth.service.js"
 
 export async function getBoards(req, res) {
   try {
@@ -38,8 +39,17 @@ export async function removeBoard(req, res) {
 
 export async function updateBoard(req, res) {
   const boardToUpdate = req.body
+  const { loggedinUser } = req
   try {
     const updatedBoard = await boardService.update(boardToUpdate)
+    // Notify all users except initiator of the update
+    socketService.broadcast({
+      type: "update-board",
+      data: updatedBoard,
+      room: updatedBoard._id,
+      userId: loggedinUser._id,
+    })
+
     res.json(updatedBoard)
   } catch (err) {
     loggerService.error("Failed to get board", err)
