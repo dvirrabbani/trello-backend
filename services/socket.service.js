@@ -43,6 +43,15 @@ export function setupSocketAPI(http) {
       loggerService.info(`Removing socket.userId for socket [id: ${socket.id}]`)
       delete socket.userId
     })
+
+    socket.on("add-member", (activity) => {
+      console.log("socket-server - add-member", activity)
+      emitToUser({
+        type: "notification",
+        data: activity,
+        userId: activity.member.id,
+      })
+    })
   })
 }
 
