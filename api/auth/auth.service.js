@@ -28,12 +28,12 @@ async function login(email, password) {
   return userToLogin
 }
 
-async function signup(email, username, fullName, imgUrl, password) {
+async function signup(email, username, fullName, imgUrl = "", password) {
   const saltRounds = 10
 
   console.log({ email, username, password, fullName, imgUrl })
   loggerService.debug(`auth.service - signup with username: ${username}, fullName: ${fullName}`)
-  if (!email || !username || !password || !fullName || !imgUrl) throw new Error("Missing details")
+  if (!email || !username || !password || !fullName) throw new Error("Missing details")
 
   const hash = await bcrypt.hash(password, saltRounds)
   return userService.add({ email, username, fullName, imgUrl, password: hash })
