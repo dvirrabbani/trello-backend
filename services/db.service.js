@@ -6,6 +6,7 @@ import { loggerService } from "./logger.service.js"
 
 export const dbService = {
   getCollection,
+  _connect,
 }
 
 var dbConn = null

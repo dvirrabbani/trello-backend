@@ -25,16 +25,8 @@ export async function signup(req, res) {
     // Never write passwords to log file!!!
     //loggerService.debug(fullName + ', ' + username + ', ' + password)
 
-    const account = await authService.signup(
-      email,
-      username,
-      fullName,
-      imgUrl,
-      password
-    )
-    loggerService.debug(
-      `auth.route - new account created: ` + JSON.stringify(account)
-    )
+    const account = await authService.signup(email, username, fullName, imgUrl, password)
+    loggerService.debug(`auth.route - new account created: ` + JSON.stringify(account))
 
     const user = await authService.login(email, password)
     const loginToken = authService.getLoginToken(user)
@@ -49,6 +41,9 @@ export async function signup(req, res) {
 
 export async function logout(req, res) {
   try {
+    req.session.destroy()
+    res.clearCookie("connect.sid")
+
     res.clearCookie("loginToken")
     res.send({ msg: "Logged out successfully" })
   } catch (err) {

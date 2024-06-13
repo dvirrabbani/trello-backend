@@ -10,6 +10,7 @@ export const userService = {
   getByEmail,
   update,
   add,
+  addGoogleUser,
 }
 
 async function query(filterBy = {}) {
@@ -86,6 +87,27 @@ async function add(user) {
       username,
       fullName,
       password,
+      imgUrl,
+      recentBoards: [],
+      createdAt: Date.now(),
+    }
+    const collection = await dbService.getCollection("user")
+    await collection.insertOne(userToCreate)
+    return userToCreate
+  } catch (err) {
+    loggerService.error("cannot create user", err)
+    throw err
+  }
+}
+
+async function addGoogleUser(user) {
+  try {
+    // peek only updatable fields!
+    const { fullName, username, imgUrl, email } = user
+    const userToCreate = {
+      email,
+      username,
+      fullName,
       imgUrl,
       recentBoards: [],
       createdAt: Date.now(),
