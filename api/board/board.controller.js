@@ -62,6 +62,9 @@ export async function updateBoard(req, res) {
 export async function addBoard(req, res) {
   const { title, style, labels, activities } = req.body
   const { loggedinUser } = asyncLocalStorage.getStore()
+  let userCopy = { ...loggedinUser }
+  userCopy.id = userCopy._id
+  delete userCopy._id
 
   const boardToSave = {
     title,
@@ -71,10 +74,10 @@ export async function addBoard(req, res) {
     isStarred: false,
     archivedAt: null,
     groups: [],
-    members: [loggedinUser],
+    members: [userCopy],
   }
 
-  boardToSave.createdBy = loggedinUser
+  boardToSave.createdBy = userCopy
 
   try {
     const addedBoard = await boardService.add(boardToSave)
